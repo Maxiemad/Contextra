@@ -1,0 +1,94 @@
+{
+  "jobs": {
+    "74e0f515-74f5-41f1-9abc-e5b939514254": {
+      "job_id": "74e0f515-74f5-41f1-9abc-e5b939514254",
+      "status": "completed",
+      "source_name": "AkankshaSharma_InternshalaResume-6.pdf",
+      "created_at": "2026-04-12T11:59:40.308703+00:00",
+      "updated_at": "2026-04-12T12:00:09.794712+00:00",
+      "error": null,
+      "result": {
+        "document_id": "2e9c7668-108e-411a-8307-3cb43f6f09c3",
+        "source_name": "AkankshaSharma_InternshalaResume-6.pdf",
+        "source_type": "pdf",
+        "chunks_indexed": 4,
+        "message": "Indexed 4 chunks."
+      }
+    },
+    "ae4a5c3a-45be-4626-9da1-9b54b7c561ca": {
+      "job_id": "ae4a5c3a-45be-4626-9da1-9b54b7c561ca",
+      "status": "completed",
+      "source_name": "11565e35-b682-4549-b626-76b1ab3b96f3.png",
+      "created_at": "2026-04-12T12:26:39.083997+00:00",
+      "updated_at": "2026-04-12T12:26:41.084676+00:00",
+      "error": null,
+      "result": {
+        "document_id": "c080480d-9fa1-4b30-9505-167d9b96bb96",
+        "source_name": "11565e35-b682-4549-b626-76b1ab3b96f3.png",
+        "source_type": "image",
+        "chunks_indexed": 1,
+        "message": "Indexed 1 chunks."
+      }
+    },
+    "c7c28e5a-000e-44cb-bd6d-6c50e80af3c9": {
+      "job_id": "c7c28e5a-000e-44cb-bd6d-6c50e80af3c9",
+      "status": "completed",
+      "source_name": "7decb89074ad8cd04bd291cc558a41ca.jpg",
+      "created_at": "2026-04-13T05:30:31.184396+00:00",
+      "updated_at": "2026-04-13T05:31:09.935536+00:00",
+      "error": null,
+      "result": {
+        "document_id": "cfd9cce8-f679-4b3c-9314-aa8edf83724a",
+        "source_name": "7decb89074ad8cd04bd291cc558a41ca.jpg",
+        "source_type": "image",
+        "chunks_indexed": 1,
+        "message": "Indexed 1 chunks."
+      }
+    },
+    "72fba8e9-bffc-4144-97a9-638eb2b6ac35": {
+      "job_id": "72fba8e9-bffc-4144-97a9-638eb2b6ac35",
+      "status": "completed",
+      "source_name": "69ba50aa-93e2-42fb-a002-736618a2bd81.png",
+      "created_at": "2026-04-13T05:31:24.952856+00:00",
+      "updated_at": "2026-04-13T05:32:17.464756+00:00",
+      "error": null,
+      "result": {
+        "document_id": "f88d7c69-d335-4c3d-b95d-f2d671d5bca5",
+        "source_name": "69ba50aa-93e2-42fb-a002-736618a2bd81.png",
+        "source_type": "image",
+        "chunks_indexed": 1,
+        "message": "Indexed 1 chunks."
+      }
+    },
+    "f1477523-f802-4bb8-814c-1a136068f133": {
+      "job_id": "f1477523-f802-4bb8-814c-1a136068f133",
+      "status": "completed",
+      "source_name": "AkankshaCase study #1 Duolingo.pdf",
+      "created_at": "2026-04-13T05:54:41.058770+00:00",
+      "updated_at": "2026-04-13T05:54:48.858467+00:00",
+      "error": null,
+      "result": {
+        "document_id": "f49949ee-a2c3-45f3-a320-a2a6e1bfd051",
+        "source_name": "AkankshaCase study #1 Duolingo.pdf",
+        "source_type": "pdf",
+        "chunks_indexed": 5,
+        "message": "Indexed 5 chunks."
+      }
+    },
+    "01a80583-cea7-41e4-83c8-1a84e7233e01": {
+      "job_id": "01a80583-cea7-41e4-83c8-1a84e7233e01",
+      "status": "completed",
+      "source_name": "Amazon-2024-Annual-Report.pdf",
+      "created_at": "2026-04-13T07:13:39.565663+00:00",
+      "updated_at": "2026-04-13T07:13:42.250860+00:00",
+      "error": null,
+      "result": {
+        "document_id": "758942e3-51be-47ba-b26f-75181a7de90f",
+        "source_name": "Amazon-2024-Annual-Report.pdf",
+        "source_type": "pdf",
+        "chunks_indexed": 171,
+        "message": "Indexed 171 chunks."
+      }
+    }
+  }
+}
