@@ -1,9 +1,10 @@
-"""Chat LLM factory: OpenAI, Hugging Face Inference, or free local Ollama."""
+"""LLM factory: OpenAI, Hugging Face text-generation, or free local Ollama."""
 from __future__ import annotations
 
 import os
 
 from langchain_core.language_models.chat_models import BaseChatModel
+from langchain_core.runnables import Runnable
 
 from app.config import get_settings
 
@@ -27,7 +28,12 @@ def is_llm_configured() -> bool:
     return True
 
 
-def get_chat_llm() -> BaseChatModel:
+def get_llm() -> tuple[str, Runnable]:
+    """
+    Returns (kind, runnable) where kind is:
+    - "chat" for chat-models that accept messages (OpenAI, Ollama)
+    - "text" for text-generation models that accept a single prompt string (Hugging Face)
+    """
     settings = get_settings()
     mode = (settings.llm_backend or "auto").lower()
     if mode == "auto":
@@ -43,11 +49,14 @@ def get_chat_llm() -> BaseChatModel:
             raise RuntimeError("OPENAI_API_KEY is required when LLM_BACKEND=openai.")
         from langchain_openai import ChatOpenAI
 
-        return ChatOpenAI(
+        return (
+            "chat",
+            ChatOpenAI(
             model=settings.openai_chat_model,
             api_key=settings.openai_api_key,
             base_url=settings.openai_base_url,
             temperature=0.2,
+            ),
         )
 
     if mode == "huggingface":
@@ -56,9 +65,10 @@ def get_chat_llm() -> BaseChatModel:
             raise RuntimeError(
                 "Hugging Face token required: set HUGGINGFACEHUB_API_TOKEN or HF_TOKEN when LLM_BACKEND=huggingface."
             )
-        from langchain_huggingface import ChatHuggingFace
         from langchain_huggingface.llms import HuggingFaceEndpoint
 
+        # Use plain text-generation instead of chat_completion.
+        # This avoids "model_not_supported" errors from providers that don't expose chat APIs.
         llm = HuggingFaceEndpoint(
             repo_id=settings.hf_chat_repo_id,
             huggingfacehub_api_token=token,
@@ -67,17 +77,31 @@ def get_chat_llm() -> BaseChatModel:
             temperature=0.2,
             do_sample=True,
         )
-        return ChatHuggingFace(llm=llm)
+        return ("text", llm)
 
     if mode == "ollama":
         from langchain_ollama import ChatOllama
 
-        return ChatOllama(
-            model=settings.ollama_model,
-            base_url=settings.ollama_base_url,
-            temperature=0.2,
+        return (
+            "chat",
+            ChatOllama(
+                model=settings.ollama_model,
+                base_url=settings.ollama_base_url,
+                temperature=0.2,
+            ),
         )
 
     raise RuntimeError(
         f"Unknown LLM_BACKEND: {settings.llm_backend!r} (use auto, openai, huggingface, ollama)"
     )
+
+
+def get_chat_llm() -> BaseChatModel:
+    """Backward-compatible helper for code paths that require a chat model."""
+    kind, llm = get_llm()
+    if kind != "chat":
+        raise RuntimeError(
+            "This operation requires a chat model, but LLM_BACKEND is configured for text-generation. "
+            "Set LLM_BACKEND=openai or LLM_BACKEND=ollama, or update the calling code to support text-generation."
+        )
+    return llm  # type: ignore[return-value]
