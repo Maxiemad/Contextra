@@ -8,12 +8,12 @@ Orchestration pipeline (LangChain composition):
 from __future__ import annotations
 
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 
 from app.config import get_settings
 from app.models.schemas import Citation, QueryResponse, SourceType
 from app.retrieval.langchain_retriever import TopKFaissRetriever
-from app.services.llm import get_chat_llm
+from app.services.llm import get_llm
 
 SYSTEM_BASE = """You are a careful research assistant. Answer ONLY using the provided CONTEXT.
 If the context is insufficient, say so clearly.
@@ -37,6 +37,20 @@ CONTEXT (authoritative; do not invent facts beyond it):
 """,
         ),
     ]
+)
+
+TEXT_PROMPT = PromptTemplate.from_template(
+    """SYSTEM:
+{system}
+
+{instructions}
+
+USER QUESTION:
+{query}
+
+CONTEXT (authoritative; do not invent facts beyond it):
+{context}
+"""
 )
 
 
@@ -128,15 +142,26 @@ def run_query(
         ]
         return QueryResponse(answer=answer, citations=citations, retrieved_chunks_preview=preview)
 
-    llm = get_chat_llm()
-    chain = PROMPT | llm | StrOutputParser()
-    answer = chain.invoke(
-        {
-            "instructions": instructions,
-            "query": query,
-            "context": ctx,
-        }
-    ).strip()
+    kind, llm = get_llm()
+    if kind == "chat":
+        chain = PROMPT | llm | StrOutputParser()
+        answer = chain.invoke(
+            {
+                "instructions": instructions,
+                "query": query,
+                "context": ctx,
+            }
+        ).strip()
+    else:
+        chain = TEXT_PROMPT | llm | StrOutputParser()
+        answer = chain.invoke(
+            {
+                "system": SYSTEM_BASE,
+                "instructions": instructions,
+                "query": query,
+                "context": ctx,
+            }
+        ).strip()
 
     preview = [
         {
