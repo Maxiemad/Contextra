@@ -57,7 +57,8 @@ class Settings(BaseSettings):
     default_top_k: int = 5
     max_upload_mb: int = 100
 
-    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    # Set to '*' to allow all origins, or provide a comma-separated list of allowed origins.
+    cors_origins: str = "*"
 
 
 @lru_cache
