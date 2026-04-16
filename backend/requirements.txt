@@ -10,17 +10,16 @@ langchain>=0.3.0
 langchain-core>=0.3.0
 langchain-community>=0.3.0
 langchain-openai>=0.2.0
-langchain-huggingface>=0.1.0
 langchain-ollama>=0.2.0
-huggingface_hub>=0.23.0
 langchain-text-splitters>=0.3.0
 
 faiss-cpu>=1.8.0
-tiktoken>=0.7.0
-openai>=1.50.0
 
-# Local embeddings — used automatically when no OpenAI/HF key (e.g. Groq-only setup)
+# Local embeddings (replaces HuggingFace Inference API)
 sentence-transformers>=3.0.0
+# Force CPU-only torch on Render to avoid pulling 2GB+ CUDA wheels
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.2.0
 
 pypdf>=5.0.0
 python-docx>=1.1.0

@@ -1,10 +1,16 @@
 /** Production: set VITE_API_BASE_URL to your API origin (e.g. https://api-xxx.onrender.com). */
-const BASE =
+/** Production: set VITE_API_BASE_URL to your API origin (e.g. https://api-xxx.onrender.com). */
+const BASE = (
   (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim() ||
   (import.meta.env.VITE_API_BASE as string | undefined)?.trim() ||
-  "";
+  ""
+).replace(/\/$/, "");
 
 const TENANT_STORAGE_KEY = "multimodal_rag_tenant_id";
+
+export function getApiBase(): string {
+  return BASE;
+}
 
 export function getTenantId(): string {
   try {
@@ -32,8 +38,34 @@ function withAuthHeaders(init?: RequestInit): RequestInit {
   return { ...init, headers };
 }
 
+/**
+ * Fetch with timeout + automatic single retry on network errors
+ * (helps with Render cold starts — first request after idle can take 30–60s).
+ */
 async function apiFetch(input: string, init?: RequestInit): Promise<Response> {
-  return fetch(input, withAuthHeaders(init));
+  const timeoutMs = 90_000; // 90s: survives a Render cold start
+  const doFetch = async (): Promise<Response> => {
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), timeoutMs);
+    try {
+      return await fetch(input, { ...withAuthHeaders(init), signal: ctl.signal });
+    } finally {
+      clearTimeout(t);
+    }
+  };
+  try {
+    return await doFetch();
+  } catch (e) {
+    // Retry once on network / abort errors (typical cold-start failure mode)
+    if (
+      e instanceof TypeError ||
+      (e instanceof DOMException && e.name === "AbortError")
+    ) {
+      await new Promise((r) => setTimeout(r, 750));
+      return doFetch();
+    }
+    throw e;
+  }
 }
 
 /** Readable message from FastAPI `{ "detail": "..." }` or validation errors */
