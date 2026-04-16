@@ -1,0 +1,18 @@
+# Env files
+.env
+backend/.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+
+# Mac
+.DS_Store
+
+# Node (if frontend inside repo)
+node_modules/
+dist/
+build/
